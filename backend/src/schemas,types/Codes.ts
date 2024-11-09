@@ -15,6 +15,11 @@ export enum ResponseStatus {
   GatewayTimeout = 504
 }
 
+export enum Categories {
+  "urgent" = 9,
+  "important" = 6,
+  "nicetohave"= 3
+}
 export interface CustomRequest extends Request { 
     userId?: string;
 }

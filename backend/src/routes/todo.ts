@@ -3,7 +3,7 @@ const router = express.Router();
 import userAuth from '../middleware/auth';
 import { CustomRequest } from '../schemas,types/Codes';
 import { addTodoSchema,updateTodoSchema } from '../schemas,types/todoSchema';
-import { ResponseStatus } from '../schemas,types/Codes';
+import { ResponseStatus,Categories } from '../schemas,types/Codes';
 import { PrismaClient } from '@prisma/client';
 
 router.get('/', (req, res) => { 
@@ -77,4 +77,41 @@ router.post('/updateTodo', userAuth, async (req, res) => {
         
     }
 })
+
+router.get('/getTodos', userAuth, async (req, res) => { 
+    const prisma = new PrismaClient();
+    const userId = (req as CustomRequest).userId;
+    try { 
+        const result = await prisma.todo.findMany({
+            where: {
+                userId:Number(userId)
+            }
+
+        })
+        const todos=SortTodos({result})
+        res.status(ResponseStatus.Success).json({
+            todos
+        })
+        return;
+        
+    }
+    catch (err) { 
+        console.log("This is getTodos error => ", err);
+        res.status(ResponseStatus.InternalServerError).json({
+            message:"Internal Server error"
+        })
+        
+    }
+
+})
+
+
+function SortTodos({ result }: { result: any[] }) {
+    return result.sort((a, b) => {
+        const aTotal:any = a.importance + Categories[a.category];
+        const bTotal:any = b.importance + Categories[b.category];
+
+        return bTotal - aTotal;
+    });
+}
 export default router;
