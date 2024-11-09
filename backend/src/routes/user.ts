@@ -57,9 +57,47 @@ router.post("/signup", async(req, res) => {
   }
 })
 
-router.post("/signin", (req, res) => {
+router.post("/signin", async (req, res) => {
     const { email, password } = req.body;
-    const resultParse = userSignInSchema.safeParse({ email, password });
+  const resultParse = userSignInSchema.safeParse({ email, password });
+  
+  if (!resultParse.success) {
+    console.log(resultParse.error);
+    res.status(ResponseStatus.BadRequest).json({
+      message: "Invalid data"
+    });
+    return;
+  }
+  try {
+    const result = await prisma.user.findUnique({
+      where: {
+        email: email,
+        password: password
+      }
+    })
+    console.log("this is result", result);
+    if (!result) { 
+      res.status(ResponseStatus.NotFound).json({
+        message:"User not found"
+      })
+      return;
+    }
+    if (!process.env.JWT_SECRET) { 
+      throw new Error("JWT_SECRET is not defined");
+    }
+    const token = jwt.sign({ username: result.username }, process.env.JWT_SECRET);
+    res.status(ResponseStatus.Success).json({
+      token:token
+    });
+    return;
+   }
+  catch (error) { 
+    console.log(error);
+    res.status(ResponseStatus.InternalServerError).json({
+      message: "Something went wrong"
+    });
+  }
+
     console.log(resultParse);
     res.send("done");
 
