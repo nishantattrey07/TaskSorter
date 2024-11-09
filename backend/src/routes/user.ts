@@ -1,8 +1,10 @@
-import express from "express";
+import express, { Response } from "express";
 const router = express.Router();
 import jwt from "jsonwebtoken";
 import { ResponseStatus } from "../schemas,types/Codes";
 import { PrismaClient } from "@prisma/client";
+import userAuth from "../middleware/auth";
+import { CustomRequest } from "../schemas,types/Codes";
 import { config } from "dotenv";
 config();
 
@@ -10,8 +12,11 @@ config();
 const prisma = new PrismaClient();
 
 import { userSignUpSchema,userSignInSchema } from "../schemas,types/userSchema";
-router.get("/", (req, res) => {
-  res.send("User route");
+router.get("/", userAuth, (req, res) => {
+  const userId = (req as CustomRequest).userId;
+  res.status(ResponseStatus.Success).json({
+    message:userId
+  });
 });
 
 

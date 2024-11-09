@@ -29,8 +29,8 @@ model Todo{
   completed Boolean @default(false)
   importance Int
   category String
-  duration String
-  date DateTime
+  duration String?
+  date DateTime?
   userId Int
   user User @relation(fields: [userId], references: [userId], onDelete: Cascade)
 }

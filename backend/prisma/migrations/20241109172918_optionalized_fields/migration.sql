@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Todo" ALTER COLUMN "duration" DROP NOT NULL,
+ALTER COLUMN "date" DROP NOT NULL;

@@ -1,3 +1,4 @@
+import express, {Request} from 'express';
 export enum ResponseStatus {
   Success = 200,
   Created = 201,
@@ -13,3 +14,9 @@ export enum ResponseStatus {
   ServiceUnavailable = 503,
   GatewayTimeout = 504
 }
+
+export interface CustomRequest extends Request { 
+    userId?: string;
+}
+
+
