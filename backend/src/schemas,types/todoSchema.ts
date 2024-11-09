@@ -10,4 +10,6 @@ export const addTodoSchema = z.object({
     date:z.date().optional()
 })
 
+export const updateTodoSchema = addTodoSchema.partial();
+
 

@@ -2,7 +2,7 @@ import express from 'express';
 const router = express.Router();
 import userAuth from '../middleware/auth';
 import { CustomRequest } from '../schemas,types/Codes';
-import { addTodoSchema } from '../schemas,types/todoSchema';
+import { addTodoSchema,updateTodoSchema } from '../schemas,types/todoSchema';
 import { ResponseStatus } from '../schemas,types/Codes';
 import { PrismaClient } from '@prisma/client';
 
@@ -41,5 +41,40 @@ router.post('/createTodo', userAuth, async (req, res) => {
     }
     
     
+})
+
+
+router.post('/updateTodo', userAuth, async (req, res) => { 
+    const prisma = new PrismaClient();
+    const userId = (req as CustomRequest).userId;
+    const { todoId,title, description, importance, category, completed, duration, date } = req.body;
+    const verify = updateTodoSchema.safeParse({ title, description, importance, category, completed, duration, date });
+    if (!verify) { 
+        res.status(ResponseStatus.BadRequest).json({
+            message: "Fill the fields Properly"
+        });
+        return;
+    }
+    try { 
+        const updateTodo = await prisma.todo.update({
+            where: {
+                todoId:todoId
+            },
+            data: {
+                title, description, importance, category, completed, duration, date
+            }
+        })
+        res.status(ResponseStatus.Success).json({
+            message:"Updated Task Successfully"
+        })
+        return;
+    }
+    catch (err) { 
+        console.log("This is updateTodo section error => ", err);
+        res.send(ResponseStatus.InternalServerError).json({
+            message: "Internal Server error"
+        })
+        
+    }
 })
 export default router;
