@@ -3,6 +3,8 @@ import InputBox from "../components/Inputbox";
 import { Button } from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { userToken } from "../store/atoms/Auth";
 
 export default function Signup() {
     const { VITE_USER_PATH } = import.meta.env;
@@ -11,6 +13,7 @@ export default function Signup() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const setUserToken = useSetRecoilState(userToken);
     const navigate = useNavigate();
     const handleFirstNameChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +50,9 @@ export default function Signup() {
             username, firstName, lastName, email, password
         });
         console.log(response.data.token);
-        
+        const token = response.data.token;
+        setUserToken(token);
+        localStorage.setItem("authToken", token);
         navigate('/dashboard');
     }
 
@@ -75,7 +80,7 @@ export default function Signup() {
                     <div className="flex text-sm">
                         <p>Already have an Account? </p>
                         <a className="pointer underline pl-1 cursor-pointer mb-3" onClick={() => {
-                            console.log(VITE_USER_PATH);
+                           navigate('/signin')
                         }}>Sign In</a>
 
                     </div>
