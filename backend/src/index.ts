@@ -1,7 +1,10 @@
 import express from 'express';
+import cors from 'cors';
+
 const app = express();
 app.use(express.json());
 import apiV1 from './routes/apiV1'
+app.use(cors());
 
 app.get('/', (req, res) => { 
     res.send('Todo Is on');
@@ -12,4 +15,5 @@ app.listen(3000, () => {
 })
 
 app.use('/api/v1/', apiV1);
+
 
