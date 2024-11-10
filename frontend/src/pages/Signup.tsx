@@ -49,7 +49,6 @@ export default function Signup() {
         const response = await axios.post(`${VITE_USER_PATH}/user/signup`, {
             username, firstName, lastName, email, password
         });
-        console.log(response.data.token);
         const token = response.data.token;
         setUserToken(token);
         localStorage.setItem("authToken", token);
