@@ -56,9 +56,9 @@ export default function Signup() {
     }
 
     return (
-        <div className="flex items-center justify-center">
-            <div className="shadow-md min-w-[250px] sm:min-w-[350px] max-w-[450px]">
-                <div className="text-2xl mb-7 mt-2 font-bold">
+        <div className="flex items-center justify-center ">
+            <div className="shadow-md rounded min-w-[250px] sm:min-w-[350px] max-w-[450px] bg-lavender mt-11">
+                <div className="text-2xl mb-7 mt-2 font-bold text-center text-charcol">
                     Sign Up
                 </div>
 
